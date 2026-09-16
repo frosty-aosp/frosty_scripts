@@ -38,16 +38,16 @@ fi
 
 TOP="$(gettop)"
 MERGEDREPOS="${TOP}/merged_repos_lineage.txt"
-MANIFEST="${TOP}/.repo/manifests/snippets/revived.xml"
-REVIVED_BRANCH=$(git -C ${TOP}/.repo/manifests.git config --get branch.default.merge | sed 's#refs/heads/##g')
+MANIFEST="${TOP}/.repo/manifests/snippets/frosty.xml"
+FROSTY_BRANCH=$(git -C ${TOP}/.repo/manifests.git config --get branch.default.merge | sed 's#refs/heads/##g')
 
 # Build list of Revived forked repos
 PROJECTPATHS=$(repo forall -g lineage -c 'echo -n "$REPO_PATH "')
 
-echo "#### LineageOS branch = ${BRANCH} Branch = ${REVIVED_BRANCH} ####"
+echo "#### Frosty branch = ${BRANCH} Branch = ${FROSTY_BRANCH} ####"
 
 # Make sure manifest and forked repos are in a consistent state
-echo "#### Verifying there are no uncommitted changes on Revived forked LineageOS projects ####"
+echo "#### Verifying there are no uncommitted changes on Frosty forked LineageOS projects ####"
 for PROJECTPATH in ${PROJECTPATHS} .repo/manifests; do
     # Skip fully removed projects
     [ ! -d "${TOP}/$PROJECTPATH" ] && continue;
@@ -66,17 +66,7 @@ rm -f "${MERGEDREPOS}"
 for PROJECTPATH in ${PROJECTPATHS}; do
     REPO=android_$(echo $PROJECTPATH | sed 's|/|_|g')
     REPOBRANCH="${BRANCH}"
-    LOCAL_BRANCH="${REVIVED_BRANCH}"
-
-    # Override repo name / branch for prefixed projects
-    if [[ "android" = "${PROJECTPATH}" ]]; then
-        REPO="android"
-    elif [[ "lineage/wiki" = "${PROJECTPATH}" ]]; then
-        REPO="lineage_wiki"
-	REPOBRANCH="main"
-    elif [[ "build/make" = "${PROJECTPATH}" ]]; then
-        REPO="android_build"
-    fi
+    LOCAL_BRANCH="${FROSTY_BRANCH}"
 
     cd "${TOP}/${PROJECTPATH}"
     echo "### Merging ${REPOBRANCH} into ${PROJECTPATH} ###"
