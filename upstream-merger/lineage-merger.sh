@@ -38,8 +38,9 @@ fi
 
 TOP="$(gettop)"
 MERGEDREPOS="${TOP}/merged_repos_lineage.txt"
-MANIFEST="${TOP}/.repo/manifests/snippets/frosty.xml"
 FROSTY_BRANCH=$(git -C ${TOP}/.repo/manifests.git config --get branch.default.merge | sed 's#refs/heads/##g')
+
+repo forall -g lineage -c 'git pull frosty ananas --unshallow'
 
 # Build list of Revived forked repos
 PROJECTPATHS=$(repo forall -g lineage -c 'echo -n "$REPO_PATH "')

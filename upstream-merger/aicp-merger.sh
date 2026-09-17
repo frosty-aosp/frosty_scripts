@@ -38,8 +38,9 @@ fi
 
 TOP="$(gettop)"
 MERGEDREPOS="${TOP}/merged_repos_aicp.txt"
-MANIFEST="${TOP}/.repo/manifests/snippets/frosty.xml"
 FROSTY_BRANCH=$(git -C ${TOP}/.repo/manifests.git config --get branch.default.merge | sed 's#refs/heads/##g')
+
+repo forall -g lineage -c 'git pull frosty ananas --unshallow'
 
 # Build list of Revived forked repos
 PROJECTPATHS=$(repo forall -g aicp -c 'echo -n "$REPO_PATH "')
@@ -73,11 +74,17 @@ for PROJECTPATH in ${PROJECTPATHS}; do
         REPO="platform_manifest"
     elif [[ "build/make" = "${PROJECTPATH}" ]]; then
         REPO="build"
+    elif [[ "device/frosty/sepolicy" = "${PROJECTPATH}" ]]; then
+        REPO="device_aicp_sepolicy"
+    elif [[ "packages/overlays/Frosty" = "${PROJECTPATH}" ]]; then
+        REPO="packages_overlays_AICP"
+    elif [[ "vendor/frosty" = "${PROJECTPATH}" ]]; then
+        REPO="vendor_aicp"
     fi
 
     cd "${TOP}/${PROJECTPATH}"
     echo "### Merging ${REPOBRANCH} into ${PROJECTPATH} ###"
-    git fetch https://github.com/LineageOS/"${REPO}" "${REPOBRANCH}"
+    git fetch https://github.com/AICP/"${REPO}" "${REPOBRANCH}"
 
     # Was there any change upstream? Skip if not.
     if [[ -z "$(git log --oneline HEAD..FETCH_HEAD)" ]]; then
