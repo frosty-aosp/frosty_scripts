@@ -40,7 +40,7 @@ TOP="$(gettop)"
 MERGEDREPOS="${TOP}/merged_repos_aicp.txt"
 FROSTY_BRANCH=$(git -C ${TOP}/.repo/manifests.git config --get branch.default.merge | sed 's#refs/heads/##g')
 
-repo forall -g lineage -c 'git pull frosty ananas --unshallow'
+repo forall -g aicp -c 'git pull frosty ananas --unshallow'
 
 # Build list of Revived forked repos
 PROJECTPATHS=$(repo forall -g aicp -c 'echo -n "$REPO_PATH "')
