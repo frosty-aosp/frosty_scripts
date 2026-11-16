@@ -31,6 +31,10 @@ def parse_cmdline() -> argparse.Namespace:
     subparser.add_argument("--fetch", help="Remote path", required=True)
     subparser.add_argument("--revision", help="Remote revision")
 
+    subparser = subparsers.add_parser("remove-project", parents=[parser_common])
+    subparser.add_argument("--name", help="Remove project name", required=True)
+    subparser.add_argument("--path", help="Remove project path")
+
     return parser.parse_args()
 
 
@@ -88,6 +92,16 @@ def main() -> None:
 
         if args.revision:
             element.attrib["revision"] = args.revision
+    elif args.command == "remove-project":
+        element = ElementTree.Element(
+            "remove-project",
+            attrib={
+                "name": args.name,
+            },
+        )
+
+        if args.path:
+            element.attrib["path"] = args.path
     for child in manifest.findall(element.tag):
         if element.attrib == child.attrib:
             sys.exit("Element with the same attributes already exists")
